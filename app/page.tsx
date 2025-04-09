@@ -5,6 +5,10 @@ interface Reign{
     map: Terrain[],
 }
 
+interface Warehouse{
+
+}
+
 interface Terrain{
     type: string,
     options: string,
@@ -14,7 +18,7 @@ interface Terrain{
 interface Building{
     type: string,
     resource: string,
-    production: string,
+    production: Resource,
     productionRate: number
 }
 
@@ -41,9 +45,8 @@ export default async function Home() {
                               <p>Costruibili : {terrain.options}</p>
                               <div className="bg-neutral-700 p-2 rounded-lg">
                                   <p>Tipo : {terrain.building.type}</p>
-                                  <p>Risorsa : {terrain.building.type}</p>
-                                  <p>Tipo : {terrain.building.type}</p>
-                                  <p>Tipo : {terrain.building.type}</p>
+                                  <p>Risorse immagazzinate : {terrain.building.production.quantity} {terrain.building.production.type}</p>
+                                  <p>Velocità : {terrain.building.productionRate}</p>
                               </div>
                           </div>
                           :
