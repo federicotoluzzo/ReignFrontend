@@ -6,16 +6,12 @@ interface Reign{
 }
 
 interface Warehouse{
-    WOOD: number,
-    STONE: number,
-    VEGETABLE: number,
-    MEAT: number,
-    IRON: number
+    warehouse: Resource[]
 }
 
 interface Terrain{
     type: string,
-    options: string,
+    options: string[],
     building: Building
 }
 
@@ -33,32 +29,39 @@ interface Resource{
 
 export default async function Home() {
   const resp = await fetch("http://localhost:8080/reign");
-  const reign:Reign = await resp.json();
-  let key = 0; 
+  const reign:Reign = await resp.json()
+    let key = 0;
   return (
       <div className="flex flex-col gap-10 w-screen items-center justify-center">
           <p>Reign name : {reign.name}</p>
           <p>Reign gold : {reign.gold}</p>
-          <div>
-              Reign warehouse :
-              <p>🪵  {reign.warehouse.WOOD}</p>
-              <p>🪨  {reign.warehouse.STONE}</p>
-              <p>🥕  {reign.warehouse.VEGETABLE}</p>
-              <p>🥩  {reign.warehouse.MEAT}</p>
-              <p>⛓️  {reign.warehouse.IRON}</p>
+          <div className="text-center">Reign warehouse :
+              <ul className="flex flex-row gap-4 m-8">
+                  {reign.warehouse.warehouse.map(resource => (
+                      <li key={resource.type} className="bg-sky-900 rounded-2xl p-4">
+                          <p>Tipo : {resource.type}</p>
+                          <p>Quantità : {resource.quantity}</p>
+                      </li>
+                  ))}
+              </ul>
           </div>
-          <div>Reign terrains :
-              <div className="flex flex-row gap-4">
+          <div className="text-center">Reign terrains :
+              <div className="flex flex-row gap-4 m-8">
                   {reign.map.map(terrain => (
                       terrain ?
                           <div key={key++} className="aspect-square bg-neutral-800 rounded-2xl p-4 flex items-center flex-col gap-2">
                               <p>Tipo : {terrain.type}</p>
-                              <p>Costruibili : {terrain.options}</p>
-                              <div className="bg-neutral-700 p-2 rounded-lg">
-                                  <p>Tipo : {terrain.building.type}</p>
-                                  <p>Risorse immagazzinate : {terrain.building.production.quantity} {terrain.building.production.type}</p>
-                                  <p>Velocità : {terrain.building.productionRate}</p>
-                              </div>
+                              <div>Costruibili : <ul>{terrain.options.map(option => <li key={option}>{option}</li>)}</ul></div>
+                              {
+                                  terrain.building != null ?
+                                      <div className="bg-neutral-700 p-2 rounded-lg">
+                                          <p>Tipo : {terrain.building.type}</p>
+                                          <p>Risorse immagazzinate : {terrain.building.production.quantity} {terrain.building.production.type}</p>
+                                          <p>Velocità : {terrain.building.productionRate}</p>
+                                      </div>
+                                      : ""
+                              }
+
                           </div>
                           :
                           <div key={key++} className="aspect-square bg-neutral-800 rounded-2xl p-4 items-center flex">Terreno ancora da sbloccare</div>
