@@ -1,12 +1,16 @@
 interface Reign{
     name: string,
     gold: number,
-    warehouse: Object,
+    warehouse: Warehouse,
     map: Terrain[],
 }
 
 interface Warehouse{
-
+    WOOD: number,
+    STONE: number,
+    VEGETABLE: number,
+    MEAT: number,
+    IRON: number
 }
 
 interface Terrain{
@@ -29,13 +33,20 @@ interface Resource{
 
 export default async function Home() {
   const resp = await fetch("http://localhost:8080/reign");
-  const reign:Reign = await resp.json()
-    let key = 0;
+  const reign:Reign = await resp.json();
+  let key = 0; 
   return (
       <div className="flex flex-col gap-10 w-screen items-center justify-center">
           <p>Reign name : {reign.name}</p>
           <p>Reign gold : {reign.gold}</p>
-          <p>Reign warehouse : work in progress</p>
+          <div>
+              Reign warehouse :
+              <p>🪵  {reign.warehouse.WOOD}</p>
+              <p>🪨  {reign.warehouse.STONE}</p>
+              <p>🥕  {reign.warehouse.VEGETABLE}</p>
+              <p>🥩  {reign.warehouse.MEAT}</p>
+              <p>⛓️  {reign.warehouse.IRON}</p>
+          </div>
           <div>Reign terrains :
               <div className="flex flex-row gap-4">
                   {reign.map.map(terrain => (
