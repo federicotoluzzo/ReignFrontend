@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 interface Reign{
     name: string,
     gold: number,
@@ -29,8 +31,15 @@ interface Resource{
 
 export default async function Home() {
   const resp = await fetch("http://localhost:8080/reign");
-  const reign:Reign = await resp.json()
-    let key = 0;
+  try{
+      const reign:Reign = await resp.json();
+  } catch {
+      return <div className="flex flex-col gap-4 items-center justify-center h-screen">
+          Regno ancora non creato
+          <Link href="/create"><button className="btn">Crea Regno</button></Link>
+      </div>
+  }
+  let key = 0;
   return (
       <div className="flex flex-col gap-10 w-screen items-center justify-center">
           <p>Reign name : {reign.name}</p>
