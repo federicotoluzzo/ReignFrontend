@@ -1,83 +1,65 @@
 import Link from "next/link";
-
-interface Reign{
-    name: string,
-    gold: number,
-    warehouse: Warehouse,
-    map: Terrain[],
-}
-
-interface Warehouse{
-    warehouse: Resource[]
-}
-
-interface Terrain{
-    type: string,
-    options: string[],
-    building: Building
-}
-
-interface Building{
-    type: string,
-    resource: string,
-    production: Resource,
-    productionRate: number
-}
-
-interface Resource{
-    type: string,
-    quantity: number
-}
+import {DialogTest} from "@/components/Dialog"
+import {Dialog, DialogContent, DialogOverlay, DialogTrigger} from "@/components/ui/dialog";
+import BuildBuildingButton from "@/components/BuildBuildingButton";
+import Warehouse from "@/components/Warehouse";
 
 export default async function Home() {
-  const resp = await fetch("http://localhost:8080/reign");
-  try{
-      const reign:Reign = await resp.json();
-  } catch {
+    const resp = await fetch("http://localhost:8080/reign");
+    let reign:Reign = null;
+    try{
+      reign = await resp.json();
+    } catch {
       return <div className="flex flex-col gap-4 items-center justify-center h-screen">
           Regno ancora non creato
           <Link href="/create"><button className="btn">Crea Regno</button></Link>
       </div>
-  }
-  let key = 0;
-  return (
-      <div className="flex flex-col gap-10 w-screen items-center justify-center">
-          <p>Reign name : {reign.name}</p>
-          <p>Reign gold : {reign.gold}</p>
-          <div className="text-center">Reign warehouse :
-              <ul className="flex flex-row gap-4 m-8">
-                  {reign.warehouse.warehouse.map(resource => (
-                      <li key={resource.type} className="bg-sky-900 rounded-2xl p-4">
-                          <p>Tipo : {resource.type}</p>
-                          <p>Quantità : {resource.quantity}</p>
-                      </li>
-                  ))}
-              </ul>
-          </div>
-          <div className="text-center">Reign terrains :
-              <div className="flex flex-row gap-4 m-8">
-                  {reign.map.map(terrain => (
-                      terrain ?
-                          <div key={key++} className="aspect-square bg-neutral-800 rounded-2xl p-4 flex items-center flex-col gap-2">
-                              <p>Tipo : {terrain.type}</p>
-                              <div>Costruibili : <ul>{terrain.options.map(option => <li key={option}>{option}</li>)}</ul></div>
-                              {
-                                  terrain.building != null ?
-                                      <div className="bg-neutral-700 p-2 rounded-lg">
-                                          <p>Tipo : {terrain.building.type}</p>
-                                          <p>Risorse immagazzinate : {terrain.building.production.quantity} {terrain.building.production.type}</p>
-                                          <p>Velocità : {terrain.building.productionRate}</p>
-                                      </div>
-                                      : ""
-                              }
-
-                          </div>
-                          :
-                          <div key={key++} className="aspect-square bg-neutral-800 rounded-2xl p-4 items-center flex">Terreno ancora da sbloccare</div>
-                  ))}
-              </div>
-
-          </div>
-      </div>
-  );
+    }
+    let key = 0;
+    return (
+        <div className="flex flex-col gap-10 w-screen items-center justify-center">
+            <p className="font-black">Nome : {reign.name}</p>
+            <p className="font-black">Oro : {reign.gold}</p>
+            <Warehouse />
+            <div className="text-center font-black">Terreni :
+                <div className="flex flex-row gap-4 m-8">
+                    {reign.map.map(terrain => (
+                        terrain ?
+                            <Dialog key={key++}>
+                                <DialogOverlay className="backdrop-blur-sm bg-transparent"></DialogOverlay>
+                                <DialogTrigger className="aspect-square relative bg-success rounded-2xl p-4 flex items-center flex-col gap-2 justify-center">
+                                    <img className="w-16 drop-shadow-sky-950 drop-shadow-md" src={terrain.type == "MOUNTAIN" ? "mountain.png" : (terrain.type == "FIELD" ? "fields.png" : "trees.png")}></img>
+                                    <img className="w-8 bg-white aspect-square rounded-full border-4 absolute top-8/12 left-8/12" src={terrain.building != null ? (terrain.building.type == "LUMBERJACK_HUT" ? "cabin.png" : (terrain.building.type == "PIG_FARM" ? "pig.png" : (terrain.building.type == "FIELD_FARM" ? "wheat.png" : (terrain.building.type == "QUARRY" ? "minings.png" : "")))) : ""}></img>
+                                </DialogTrigger>
+                                <DialogContent className="bg-base-200 border-none">
+                                    <div>
+                                        {
+                                            terrain.building != null ?
+                                                <div className="p-2 rounded-lg">
+                                                    <p>Tipo : {terrain.building.type}</p>
+                                                    <p>Risorse immagazzinate : {terrain.building.production.quantity} {terrain.building.production.type}</p>
+                                                    <p>Velocità : {terrain.building.productionRate}</p>
+                                                </div>
+                                                :
+                                                <div>
+                                                    Costruibili :
+                                                    <ul>
+                                                        {
+                                                            terrain.options.map(option =>
+                                                                <BuildBuildingButton key={option} option={option} terrain={terrain}/>
+                                                            )
+                                                        }
+                                                    </ul>
+                                                </div>
+                                        }
+                                    </div>
+                                </DialogContent>
+                            </Dialog>
+                            :
+                            <div key={key++} className="aspect-square bg-neutral-800 rounded-2xl p-4 items-center flex">Terreno ancora da sbloccare</div>
+                    ))}
+                </div>
+            </div>
+        </div>
+    );
 }

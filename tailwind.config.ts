@@ -1,3 +1,11 @@
+import catppuccin from '@catppuccin/daisyui'
+
 module.exports = {
-    plugins: [require("@catppuccin/tailwindcss")],
+    content: ['./src/**/*.{js,ts}', 'index.html'],
+    plugins: [require('daisyui')],
+    daisyui: {
+        themes: [
+            catppuccin('mocha'),
+        ],
+    },
 };
