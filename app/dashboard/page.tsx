@@ -3,6 +3,7 @@ import {DialogTest} from "@/components/Dialog"
 import {Dialog, DialogContent, DialogOverlay, DialogTrigger} from "@/components/ui/dialog";
 import BuildBuildingButton from "@/components/BuildBuildingButton";
 import Warehouse from "@/components/Warehouse";
+import { DialogTitle } from "@radix-ui/react-dialog";
 
 export default async function Home() {
     const resp = await fetch("http://localhost:8080/reign");
@@ -32,11 +33,12 @@ export default async function Home() {
                                     <img className="w-8 bg-white aspect-square rounded-full border-4 absolute top-8/12 left-8/12" src={terrain.building != null ? (terrain.building.type == "LUMBERJACK_HUT" ? "cabin.png" : (terrain.building.type == "PIG_FARM" ? "pig.png" : (terrain.building.type == "FIELD_FARM" ? "wheat.png" : (terrain.building.type == "QUARRY" ? "minings.png" : "")))) : ""}></img>
                                 </DialogTrigger>
                                 <DialogContent className="bg-base-200 border-none">
+                                    <DialogTitle></DialogTitle>
                                     <div>
                                         {
                                             terrain.building != null ?
-                                                <div className="p-2 rounded-lg">
-                                                    <p>Tipo : {terrain.building.type}</p>
+                                                <div className="p-2 rounded-lg flex flex-row gap-4 items-center justify-center">
+                                                    <img className="w-16 aspect-square" src={terrain.building != null ? (terrain.building.type == "LUMBERJACK_HUT" ? "cabin.png" : (terrain.building.type == "PIG_FARM" ? "pig.png" : (terrain.building.type == "FIELD_FARM" ? "wheat.png" : (terrain.building.type == "QUARRY" ? "minings.png" : "")))) : ""}></img>
                                                     <p>Risorse immagazzinate : {terrain.building.production.quantity} {terrain.building.production.type}</p>
                                                     <p>Velocità : {terrain.building.productionRate}</p>
                                                 </div>
@@ -55,7 +57,7 @@ export default async function Home() {
                                     </div>
                                 </DialogContent>
                             </Dialog>
-                            :
+                        :
                             <div key={key++} className="aspect-square bg-neutral-800 rounded-2xl p-4 items-center flex">Terreno ancora da sbloccare</div>
                     ))}
                 </div>
