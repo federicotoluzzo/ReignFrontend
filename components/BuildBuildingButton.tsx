@@ -15,7 +15,7 @@ async function build(terrainType:string, buildingType:string){
 
 const BuildBuildingButton = (props:{terrain:Terrain, option:string}) => {
     return (
-        <li onClick={() => build(props.terrain.type, props.option)}><img className="w-16 drop-shadow-sky-950 drop-shadow-md" src={props.option == "LUMBERJACK_HUT" ? "cabin.png" : (props.option == "PIG_FARM" ? "pig.png" : (props.option == "FIELD_FARM" ? "wheat.png" : "minings.png"))}></img><Toaster className="fixed bottom-10 right-10"/></li>
+        <li onClick={() => build(props.terrain.type, props.option)}><img className="w-16 drop-shadow-sky-950 drop-shadow-md" src={props.option == "LUMBERJACK_HUT" ? "cabin.png" : (props.option == "PIG_FARM" ? "pig.png" : (props.option == "FIELD_FARM" ? "wheat.png" : "minings.png"))}></img></li>
     )
 }
 
