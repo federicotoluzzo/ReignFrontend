@@ -68,7 +68,8 @@ export default async function Home() {
                     </div>
                 </div>
             </div>
-    
+
+
             <div className="flex flex-row fixed z-0 pointer-events-auto w-screen h-screen items-center justify-around top-0">
                 <div className="transform-gpu perspective-near">
                     <div className="grid-cols-6 w-120 h-120 transform-gpu perspective-near grid rotate-y-30 gap-1 relative">
